@@ -27,10 +27,13 @@
 
 @interface NSDate (MDCalendar)
 
-+ (NSInteger)numberOfDaysInMonth:(NSInteger)month;
++ (NSInteger)numberOfDaysInMonth:(NSInteger)month forYear:(NSInteger)year;
 + (NSDate *)dateFromComponents:(NSDateComponents *)components;
 + (NSString *)monthNameForMonth:(NSInteger)month;
-+ (NSArray *)weekdays;
++ (NSArray *)weekdays;                                          // returns all weekdays as strings, starts with Sunday
++ (NSArray *)weekdayAbbreviations;                              // returns all weekday abbreviations as strings, starts with Sun
++ (NSArray *)monthNames;                                        // returns all months as strings, starts with zero and proceeds to January
++ (NSArray *)shortMonthNames;                                   // returns all month abbreviations as strings, starts with zero and proceeds to Jan
 
 - (NSDate *)firstDayOfMonth;
 - (NSDate *)lastDayOfMonth;

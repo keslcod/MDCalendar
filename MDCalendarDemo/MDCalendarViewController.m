@@ -26,6 +26,7 @@
 #import "MDCalendarViewController.h"
 #import "MDCalendar.h"
 #import "NSDate+MDCalendar.h"
+#import "UIColor+MDCalendarDemo.h"
 
 @interface MDCalendarViewController () <MDCalendarDelegate>
 @property (nonatomic, strong) NSDate *startDate;
@@ -46,22 +47,25 @@
         
         calendarView.lineSpacing = 0.f;
         calendarView.itemSpacing = 0.0f;
-        calendarView.borderColor = [UIColor darkGrayColor];
+        calendarView.borderColor = [UIColor mightySlate];
         calendarView.borderHeight = 1.f;
+        calendarView.showsBottomSectionBorder = YES;
         
-        calendarView.textColor = [UIColor blackColor];
-        calendarView.headerTextColor = [UIColor blueColor];
-        calendarView.weekdayTextColor = [UIColor redColor];
+        calendarView.textColor = [UIColor mightySlate];
+        calendarView.headerTextColor = [UIColor mightySlate];
+        calendarView.weekdayTextColor = [UIColor grandmasPillow];
         calendarView.cellBackgroundColor = [UIColor whiteColor];
         
-        calendarView.highlightColor = [UIColor lightGrayColor];
+        calendarView.highlightColor = [UIColor pacifica];
+        calendarView.indicatorColor = [UIColor colorWithWhite:0.85 alpha:1.0];
         
-        NSDate *startDate = [[NSDate date] dateByAddingDays:4];
-        NSDate *endDate = [startDate dateByAddingMonths:6];
+        NSDate *startDate = [NSDate date];
+        NSDate *endDate = [startDate dateByAddingMonths:12*25];
         
         calendarView.startDate = startDate;
         calendarView.endDate = endDate;
         calendarView.delegate = self;
+        calendarView.canSelectDaysBeforeStartDate = NO;
         
         [self.view addSubview:calendarView];
         self.calendarView = calendarView;
@@ -79,7 +83,13 @@
 #pragma mark - MDCalendarViewDelegate
 
 - (void)calendarView:(MDCalendar *)calendarView didSelectDate:(NSDate *)date {
-    NSLog(@"Selected Date: %@", date);
+    NSLog(@"Selected Date: %@", [date descriptionWithLocale:[NSLocale currentLocale]]);
+}
+
+- (BOOL) calendarView:(MDCalendar *)calendarView shouldShowIndicatorForDate:(NSDate *)date
+{
+    // show indicator for every 4th day
+    return [date day] % 4 == 1;
 }
 
 @end
