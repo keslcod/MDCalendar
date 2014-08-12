@@ -95,21 +95,24 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
     [super setSelected:YES];
 
     UIView *highlightView = _highlightView;
-    highlightView.hidden = !selected;
-    _label.textColor = selected ? [UIColor whiteColor] : _textColor;
+    highlightView.hidden = YES;
+    _label.textColor = _textColor;
+    
+    self.backgroundColor = self.selected ? self.highlightColor : self.backgroundColor;
+    self.label.textColor = self.selected ? self.backgroundColor : self.textColor;
 
     highlightView.transform = CGAffineTransformMakeScale(.1f, .1f);
 
-    [UIView animateWithDuration:0.4
-                          delay:0.0
-         usingSpringWithDamping:0.5
-          initialSpringVelocity:1.0
-                        options:UIViewAnimationOptionCurveEaseInOut
-                     animations:^{
-                         highlightView.transform = CGAffineTransformIdentity;
-                     } completion:^(BOOL finished) {
-                         nil;
-                     }];
+//    [UIView animateWithDuration:0.4
+//                          delay:0.0
+//         usingSpringWithDamping:0.5
+//          initialSpringVelocity:1.0
+//                        options:UIViewAnimationOptionCurveEaseInOut
+//                     animations:^{
+//                         highlightView.transform = CGAffineTransformIdentity;
+//                     } completion:^(BOOL finished) {
+//                         nil;
+//                     }];
 }
 
 - (void)layoutSubviews {
@@ -118,10 +121,10 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
     CGSize viewSize = self.bounds.size;
     _label.frame = CGRectMake(0, self.borderHeight, viewSize.width, viewSize.height - self.borderHeight);
 
-    // bounds of highlight view 10% smaller than cell
-    CGFloat highlightViewInset = CGRectGetHeight(_label.frame) * 0.1f;
-    _highlightView.frame = CGRectInset(_label.frame, highlightViewInset, highlightViewInset);
-    _highlightView.layer.cornerRadius = CGRectGetHeight(_highlightView.bounds) / 2;
+//    // bounds of highlight view 10% smaller than cell
+//    CGFloat highlightViewInset = CGRectGetHeight(_label.frame) * 0.1f;
+//    _highlightView.frame = CGRectInset(_label.frame, highlightViewInset, highlightViewInset);
+//    _highlightView.layer.cornerRadius = CGRectGetHeight(_highlightView.bounds) / 2;
 
     _borderView.frame = CGRectMake(0, 0, viewSize.width, self.borderHeight);
 }
@@ -547,10 +550,13 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
         cell.selected = YES;
         [collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
         if (possibleHighlight) {
-            cell.backgroundColor = [UIColor redColor];
+            cell.backgroundColor = self.highlightColor;
+            cell.textColor = self.backgroundColor;
         }
     } else if (possibleHighlight) {
-        cell.backgroundColor = [UIColor redColor];
+        cell.backgroundColor = self.highlightColor;
+        cell.textColor = self.backgroundColor;
+
     }
 
 
@@ -591,7 +597,7 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
     }
 
     self.hightlightDates = [NSArray arrayWithArray:mHighlights];
-    [collectionView reloadItemsAtIndexPaths:@[ indexPath ]];
+    [collectionView reloadData];
     [_delegate calendarView:self didSelectDate:date];
 }
 
