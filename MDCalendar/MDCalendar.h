@@ -63,6 +63,9 @@
 
 @interface MDCalendar : UIView
 
+@property (nonatomic, strong) UICollectionView *collectionView;
+
+
 @property (nonatomic, assign) id<MDCalendarDelegate>delegate; /** A delegate that responds to calendar events. */
 
 ///--------------------------------
