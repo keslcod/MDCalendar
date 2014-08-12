@@ -57,13 +57,10 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
         highlightView.hidden = YES;
         self.highlightView = highlightView;
 
-        UIView *bottomBorderView = [[UIView alloc] initWithFrame:CGRectZero];
-        bottomBorderView.hidden = YES;
-        self.borderView = bottomBorderView;
+       
 
         [self.contentView addSubview:highlightView];
         [self.contentView addSubview:label];
-        [self.contentView addSubview:bottomBorderView];
 
     }
     return self;
@@ -87,8 +84,7 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
 }
 
 - (void)setBorderColor:(UIColor *)borderColor {
-    _borderView.backgroundColor = borderColor;
-    _borderView.hidden = NO;
+
 }
 
 - (void)setSelected:(BOOL)selected {
@@ -117,6 +113,9 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
 
 - (void)layoutSubviews {
     [super layoutSubviews];
+    
+    self.layer.borderColor = self.borderColor.CGColor;
+    self.layer.borderWidth = 0.5;
 
     CGSize viewSize = self.bounds.size;
     _label.frame = CGRectMake(0, self.borderHeight, viewSize.width, viewSize.height - self.borderHeight);
@@ -514,7 +513,7 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
     cell.textColor = [date isEqualToDateSansTime:[self currentDate]] ? self.highlightColor : self.textColor;
     cell.date = date;
     cell.highlightColor = self.highlightColor;
-    cell.borderHeight = self.borderHeight;
+    cell.borderHeight = 0;
     cell.borderColor = self.borderColor;
 
     NSInteger sectionMonth = [self monthForSection:indexPath.section];
