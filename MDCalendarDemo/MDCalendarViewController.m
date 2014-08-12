@@ -46,13 +46,16 @@
         
         calendarView.lineSpacing = 0.f;
         calendarView.itemSpacing = 0.0f;
-        calendarView.borderColor = [UIColor darkGrayColor];
-        calendarView.borderHeight = 1.f;
-        
+//        calendarView.borderColor = [UIColor darkGrayColor];
+//        calendarView.borderHeight = 1.f;
+
+        calendarView.hightlightDates = @[ [NSDate date], [NSDate dateWithTimeIntervalSinceNow:60*60*72] ];
+
         calendarView.textColor = [UIColor blackColor];
         calendarView.headerTextColor = [UIColor blueColor];
         calendarView.weekdayTextColor = [UIColor redColor];
         calendarView.cellBackgroundColor = [UIColor whiteColor];
+        calendarView.showsDaysOutsideCurrentMonth = YES;
         
         calendarView.highlightColor = [UIColor lightGrayColor];
         

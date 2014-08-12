@@ -82,6 +82,8 @@
 @property (nonatomic, strong) NSDate  *endDate;       /**< Specify date to end calendar. Defaults to end of month for startDate. */
 @property (nonatomic, strong) NSDate  *selectedDate;  /**< default is startDate */
 
+@property (nonatomic, strong) NSArray *hightlightDates;
+
 
 ///--------------------------------
 /// @name Appearance

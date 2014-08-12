@@ -52,15 +52,15 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
         label.textAlignment = NSTextAlignmentCenter;
         label.adjustsFontSizeToFitWidth = YES;
         self.label = label;
-        
+
         UIView *highlightView = [[UIView alloc] initWithFrame:CGRectZero];
         highlightView.hidden = YES;
         self.highlightView = highlightView;
-        
+
         UIView *bottomBorderView = [[UIView alloc] initWithFrame:CGRectZero];
         bottomBorderView.hidden = YES;
         self.borderView = bottomBorderView;
-        
+
         [self.contentView addSubview:highlightView];
         [self.contentView addSubview:label];
         [self.contentView addSubview:bottomBorderView];
@@ -93,13 +93,13 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
 
 - (void)setSelected:(BOOL)selected {
     [super setSelected:YES];
-    
+
     UIView *highlightView = _highlightView;
     highlightView.hidden = !selected;
     _label.textColor = selected ? [UIColor whiteColor] : _textColor;
 
     highlightView.transform = CGAffineTransformMakeScale(.1f, .1f);
-    
+
     [UIView animateWithDuration:0.4
                           delay:0.0
          usingSpringWithDamping:0.5
@@ -114,21 +114,21 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     CGSize viewSize = self.bounds.size;
     _label.frame = CGRectMake(0, self.borderHeight, viewSize.width, viewSize.height - self.borderHeight);
-    
+
     // bounds of highlight view 10% smaller than cell
     CGFloat highlightViewInset = CGRectGetHeight(_label.frame) * 0.1f;
     _highlightView.frame = CGRectInset(_label.frame, highlightViewInset, highlightViewInset);
     _highlightView.layer.cornerRadius = CGRectGetHeight(_highlightView.bounds) / 2;
-    
+
     _borderView.frame = CGRectMake(0, 0, viewSize.width, self.borderHeight);
 }
 
 - (void)prepareForReuse {
     [super prepareForReuse];
-    
+
     self.contentView.backgroundColor = nil;
     _label.text = @"";
 }
@@ -177,10 +177,10 @@ NSString * MDCalendarDayStringFromDate(NSDate *date) {
             dayLabel.textAlignment = NSTextAlignmentCenter;
             dayLabel.adjustsFontSizeToFitWidth = YES;
             [dayLabels addObject:dayLabel];
-            
+
             [self addSubview:dayLabel];
         }
-        
+
         self.dayLabels = dayLabels;
     }
     return self;
@@ -193,7 +193,7 @@ NSString * MDCalendarDayStringFromDate(NSDate *date) {
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     CGFloat labelWidth = CGRectGetWidth(self.bounds) / [_dayLabels count];
     CGRect labelFrame = CGRectMake(0, 0, labelWidth, [MDCalendarWeekdaysView preferredHeightWithFont:self.font]);
     for (UILabel *label in _dayLabels) {
@@ -255,7 +255,7 @@ static CGFloat const kMDCalendarHeaderViewWeekdayBottomMargin  = 5.f;
 + (CGFloat)heightForMonthLabelWithFont:(UIFont *)font {
     static CGFloat monthLabelHeight;
     static dispatch_once_t onceTokenForMonthLabelHeight;
-    
+
     dispatch_once(&onceTokenForMonthLabelHeight, ^{
         UILabel *monthLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         monthLabel.textAlignment = NSTextAlignmentCenter;
@@ -263,7 +263,7 @@ static CGFloat const kMDCalendarHeaderViewWeekdayBottomMargin  = 5.f;
         monthLabel.text = [NSDate monthNameForMonth:12];    // Using December as an example month
         monthLabelHeight = [monthLabel sizeThatFits:CGSizeZero].height;
     });
-    
+
     return monthLabelHeight;
 }
 
@@ -272,11 +272,11 @@ static CGFloat const kMDCalendarHeaderViewWeekdayBottomMargin  = 5.f;
     if (self) {
         UILabel *label = [[UILabel alloc] initWithFrame:CGRectZero];
         label.textAlignment = NSTextAlignmentCenter;
-        
+
         MDCalendarWeekdaysView *weekdaysView = [[MDCalendarWeekdaysView alloc] initWithFrame:CGRectZero];
         [self addSubview:weekdaysView];
         self.weekdaysView = weekdaysView;
-        
+
         [self addSubview:label];
         self.label = label;
     }
@@ -285,7 +285,7 @@ static CGFloat const kMDCalendarHeaderViewWeekdayBottomMargin  = 5.f;
 
 - (void)layoutSubviews {
     [super layoutSubviews];
-    
+
     CGSize viewSize = self.bounds.size;
     _label.frame = CGRectMake(0, 0, viewSize.width, (viewSize.height / 3 * 2) - kMDCalendarHeaderViewMonthBottomMargin);
     _weekdaysView.frame = CGRectMake(0, CGRectGetMaxY(_label.frame) + kMDCalendarHeaderViewMonthBottomMargin, viewSize.width, viewSize.height - CGRectGetHeight(_label.bounds) - kMDCalendarHeaderViewWeekdayBottomMargin);
@@ -350,37 +350,37 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
         layout.minimumInteritemSpacing  = kMDCalendarViewItemSpacing;
         layout.minimumLineSpacing       = kMDCalendarViewLineSpacing;
         self.layout = layout;
-        
+
         self.collectionView = [[UICollectionView alloc] initWithFrame:CGRectZero collectionViewLayout:layout];
         _collectionView.dataSource = self;
         _collectionView.delegate   = self;
         _collectionView.backgroundColor = [UIColor whiteColor];
         _collectionView.allowsMultipleSelection = NO;
-        
+
         [_collectionView registerClass:[MDCalendarViewCell class] forCellWithReuseIdentifier:kMDCalendarViewCellIdentifier];
         [_collectionView registerClass:[MDCalendarHeaderView class] forSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kMDCalendarHeaderViewIdentifier];
-        
+
 
         // Default Configuration
         self.startDate      = self.currentDate;
         self.selectedDate   = self.startDate;
         self.endDate        = [[_startDate dateByAddingMonths:3] lastDayOfMonth];
-        
+
         self.dayFont        = [UIFont systemFontOfSize:17];
         self.weekdayFont    = [UIFont systemFontOfSize:12];
-        
+
         self.cellBackgroundColor    = nil;
         self.highlightColor         = self.tintColor;
-        
+
         self.headerBackgroundColor  = nil;
         self.headerFont             = [UIFont systemFontOfSize:20];
-        
+
         self.textColor          = [UIColor darkGrayColor];
         self.headerTextColor    = _textColor;
         self.weekdayTextColor   = _textColor;
-        
+
         self.canSelectDaysBeforeStartDate = YES;
-        
+
         [self addSubview:_collectionView];
     }
     return self;
@@ -472,12 +472,12 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
     NSDateComponents *components = [date components];
     components.day = indexPath.item + 1;
     date = [NSDate dateFromComponents:components];
-    
+
     NSInteger offset = [self offsetForSection:indexPath.section];
     if (offset) {
         date = [date dateByAddingDays:-offset];
     }
-    
+
     return date;
 }
 
@@ -504,7 +504,7 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
 
 - (UICollectionViewCell *)collectionView:(UICollectionView *)collectionView cellForItemAtIndexPath:(NSIndexPath *)indexPath {
     NSDate *date = [self dateForIndexPath:indexPath];
-    
+
     MDCalendarViewCell *cell = [collectionView dequeueReusableCellWithReuseIdentifier:kMDCalendarViewCellIdentifier forIndexPath:indexPath];
     cell.backgroundColor = self.cellBackgroundColor;
     cell.font = self.dayFont;
@@ -513,21 +513,31 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
     cell.highlightColor = self.highlightColor;
     cell.borderHeight = self.borderHeight;
     cell.borderColor = self.borderColor;
-    
+
     NSInteger sectionMonth = [self monthForSection:indexPath.section];
-    
+
     cell.userInteractionEnabled = [self collectionView:collectionView shouldSelectItemAtIndexPath:indexPath] ? YES : NO;
-    
+
+    __block BOOL possibleHighlight = NO;
+    [self.hightlightDates enumerateObjectsUsingBlock:^(id obj, NSUInteger idx, BOOL *stop) {
+        if ([obj isEqualToDateSansTime:date]) {
+            possibleHighlight = YES;
+                    *stop = YES;
+        }
+    }];
+
     // Disable non-selectable cells
     if (![self collectionView:collectionView shouldSelectItemAtIndexPath:indexPath]) {
         cell.textColor = [date isEqualToDateSansTime:[self currentDate]] ? cell.textColor : [cell.textColor colorWithAlphaComponent:0.2];
         cell.userInteractionEnabled = NO;
     }
-    
+
     // Handle showing cells outside of current month
     if ([date month] != sectionMonth) {
         if (self.showsDaysOutsideCurrentMonth) {
+            if (possibleHighlight) cell.backgroundColor = [UIColor redColor];
             cell.backgroundColor = [cell.backgroundColor colorWithAlphaComponent:0.2];
+            cell.textColor = [cell.textColor colorWithAlphaComponent:0.2];
         } else {
             cell.label.text = @"";
         }
@@ -536,12 +546,20 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
         // Handle cell selection
         cell.selected = YES;
         [collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
+        if (possibleHighlight) {
+            cell.backgroundColor = [UIColor redColor];
+        }
+    } else if (possibleHighlight) {
+        cell.backgroundColor = [UIColor redColor];
     }
-    
+
+
+
     return cell;
 }
 
 - (UICollectionReusableView *)collectionView:(UICollectionView *)collectionView viewForSupplementaryElementOfKind:(NSString *)kind atIndexPath:(NSIndexPath *)indexPath {
+
     MDCalendarHeaderView *headerView = [collectionView dequeueReusableSupplementaryViewOfKind:UICollectionElementKindSectionHeader withReuseIdentifier:kMDCalendarHeaderViewIdentifier forIndexPath:indexPath];
 
     headerView.backgroundColor = self.headerBackgroundColor;
@@ -560,21 +578,34 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
 - (void)collectionView:(UICollectionView *)collectionView didSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSDate *date = [self dateForIndexPath:indexPath];
     self.selectedDate = date;
-    
+
+    NSMutableArray *mHighlights = [self.hightlightDates mutableCopy];
+    NSUInteger firstIndex = [self.hightlightDates indexesOfObjectsPassingTest:^BOOL(NSDate *obj, NSUInteger idx, BOOL *stop) {
+        return [obj isEqualToDateSansTime:date];
+    }].firstIndex;
+
+    if (firstIndex == NSNotFound) {
+        [mHighlights addObject:date];
+    } else {
+        [mHighlights removeObjectAtIndex:firstIndex];
+    }
+
+    self.hightlightDates = [NSArray arrayWithArray:mHighlights];
+    [collectionView reloadItemsAtIndexPaths:@[ indexPath ]];
     [_delegate calendarView:self didSelectDate:date];
 }
 
 - (BOOL)collectionView:(UICollectionView *)collectionView shouldSelectItemAtIndexPath:(NSIndexPath *)indexPath {
     NSDate *date = [self dateForIndexPath:indexPath];
-    
+
     if ([date isBeforeDate:self.startDate] && !self.canSelectDaysBeforeStartDate) {
         return NO;
     }
-    
+
     if ([_delegate respondsToSelector:@selector(calendarView:shouldSelectDate:)]) {
         return [_delegate calendarView:self shouldSelectDate:date];
     }
-    
+
     return YES;
 }
 
