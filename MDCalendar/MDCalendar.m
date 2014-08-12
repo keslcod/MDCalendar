@@ -84,7 +84,7 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
 }
 
 - (void)setBorderColor:(UIColor *)borderColor {
-
+    _borderColor = borderColor;
 }
 
 - (void)setSelected:(BOOL)selected {
@@ -94,7 +94,7 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
     highlightView.hidden = YES;
     _label.textColor = _textColor;
     
-    self.backgroundColor = self.selected ? self.highlightColor : self.backgroundColor;
+    self.backgroundColor = self.selected ? self.textColor : self.backgroundColor;
     self.label.textColor = self.selected ? self.backgroundColor : self.textColor;
 
     highlightView.transform = CGAffineTransformMakeScale(.1f, .1f);
