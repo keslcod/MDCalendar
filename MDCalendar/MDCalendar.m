@@ -92,10 +92,7 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
 
     UIView *highlightView = _highlightView;
     highlightView.hidden = YES;
-    _label.textColor = _textColor;
-    
-    self.backgroundColor = self.selected ? self.textColor : self.backgroundColor;
-    self.label.textColor = self.selected ? self.backgroundColor : self.textColor;
+
 
     highlightView.transform = CGAffineTransformMakeScale(.1f, .1f);
 
@@ -546,19 +543,15 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
         cell.userInteractionEnabled = NO;
     } else if ([date isEqualToDateSansTime:self.selectedDate]) {
         // Handle cell selection
-        cell.selected = YES;
         [collectionView selectItemAtIndexPath:indexPath animated:YES scrollPosition:UICollectionViewScrollPositionNone];
         if (possibleHighlight) {
-            cell.backgroundColor = self.highlightColor;
-            cell.textColor = self.backgroundColor;
+            cell.backgroundColor = self.textColor;
+            cell.textColor = self.cellBackgroundColor;
         }
     } else if (possibleHighlight) {
-        cell.backgroundColor = self.highlightColor;
-        cell.textColor = self.backgroundColor;
-
+        cell.backgroundColor = self.textColor;
+        cell.textColor = self.cellBackgroundColor;
     }
-
-
 
     return cell;
 }
