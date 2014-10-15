@@ -33,12 +33,6 @@
 + (NSInteger)numberOfDaysInMonth:(NSInteger)month forYear:(NSInteger)year;
 + (NSDate *)dateFromComponents:(NSDateComponents *)components;
 
-+ (NSArray *)weekdays;                                          // returns all weekdays as strings, starts with Sunday
-+ (NSArray *)weekdayAbbreviations;                              // returns all weekday abbreviations as strings, starts with Sun
-
-+ (NSArray *)monthNames;                                        // returns all months as strings, starts with zero and proceeds to January
-+ (NSArray *)shortMonthNames;                                   // returns all month abbreviations as strings, starts with zero and proceeds to Jan
-
 ///--------------------------------
 /// @name Date Calculations
 ///--------------------------------
@@ -52,11 +46,9 @@
 
 - (NSInteger)day;
 - (NSString *)dayOrdinalityString;
-- (NSString *)weekdayString;
 - (NSInteger)weekday;
+- (NSInteger)localizedWeekday;
 - (NSInteger)month;
-- (NSString *)monthString;
-- (NSString *)shortMonthString;
 - (NSInteger)year;
 - (NSDateComponents *)components;
 
@@ -75,5 +67,12 @@
 - (BOOL)isEqualToDateSansTime:(NSDate *)otherDate;
 - (BOOL)isBeforeDate:(NSDate *)otherDate;
 - (BOOL)isAfterDate:(NSDate *)otherDate;
+
+///--------------------------------
+/// @name UnitTests
+/// Don't use these methods in your code
+/// they are just exposed for unit tests.
+///--------------------------------
+- (NSInteger)localizedWeekdayInCalendar:(NSCalendar *)calendar;
 
 @end

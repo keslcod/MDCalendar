@@ -23,6 +23,7 @@
 //  SOFTWARE.
 
 #import "MDCalendar.h"
+#import "NSDateFormatter+LocalizedSymbols.h"
 
 @interface MDCalendarViewCell : UICollectionViewCell
 @property (nonatomic, assign) NSDate  *date;
@@ -79,8 +80,7 @@ static NSString * const kMDCalendarViewCellIdentifier = @"kMDCalendarViewCellIde
 
 - (void)setDate:(NSDate *)date {
     _label.text = MDCalendarDayStringFromDate(date);
-
-    self.accessibilityLabel = [NSString stringWithFormat:@"%@, %@ of %@ %@", [date weekdayString], [date dayOrdinalityString], [date monthString], @([date year])];
+	self.accessibilityLabel = [NSDateFormatter localizedStringFromDate:date dateStyle:NSDateFormatterLongStyle timeStyle:NSDateFormatterNoStyle];
 }
 
 - (void)setFont:(UIFont *)font {
@@ -173,7 +173,8 @@ NSString * MDCalendarDayStringFromDate(NSDate *date) {
     static CGFloat height;
     static dispatch_once_t onceTokenForWeekdayViewHeight;
     dispatch_once(&onceTokenForWeekdayViewHeight, ^{
-        NSString *day = [[NSDate weekdays] firstObject];
+		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        NSString *day = [[formatter shortStandaloneWeekdaySymbols] firstObject];
         UILabel *dayLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         dayLabel.text = day;
         dayLabel.font = font;
@@ -187,7 +188,8 @@ NSString * MDCalendarDayStringFromDate(NSDate *date) {
 - (id)initWithFrame:(CGRect)frame {
     self = [super initWithFrame:frame];
     if (self) {
-        NSArray *weekdays = [NSDate weekdays];
+		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        NSArray *weekdays = [formatter localizedShortWeekdaySymbols];
         NSMutableArray *dayLabels = [NSMutableArray new];
         for (NSString *day in weekdays) {
             UILabel *dayLabel = [[UILabel alloc] initWithFrame:CGRectZero];
@@ -238,7 +240,9 @@ NSString * MDCalendarDayStringFromDate(NSDate *date) {
 #pragma mark - UIAccessibility
 
 - (NSString *)accessibilityLabel {
-    return [NSString stringWithFormat:@"Weekdays, %@ through %@", [NSDate weekdays].firstObject, [NSDate weekdays].lastObject];
+	NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+	NSArray *weekdays = [formatter localizedStandaloneWeekdaySymbols];
+    return [NSString stringWithFormat:@"Weekdays, %@ through %@", weekdays.firstObject, weekdays.lastObject];
 }
 
 @end
@@ -288,7 +292,8 @@ static CGFloat const kMDCalendarHeaderViewWeekdayBottomMargin   = 5.f;
         UILabel *monthLabel = [[UILabel alloc] initWithFrame:CGRectZero];
         monthLabel.textAlignment = NSTextAlignmentCenter;
         monthLabel.font = font;
-        monthLabel.text = [[NSDate date] monthString];  // using current month as an example string
+		NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
+        monthLabel.text = [formatter monthSymbols].firstObject;
         monthLabelHeight = [monthLabel sizeThatFits:CGSizeZero].height;
     });
 
@@ -330,7 +335,9 @@ static CGFloat const kMDCalendarHeaderViewWeekdayBottomMargin   = 5.f;
 
 - (void)setFirstDayOfMonth:(NSDate *)firstDayOfMonth {
     _firstDayOfMonth = firstDayOfMonth;
-    NSString *monthString = [firstDayOfMonth monthString];
+	NSInteger monthIndex = [firstDayOfMonth month];
+	NSArray *monthSymbols = [@[ @"Zero" ] arrayByAddingObjectsFromArray:[[[NSDateFormatter alloc] init] monthSymbols]];
+    NSString *monthString = monthSymbols[monthIndex];
     NSString *yearString = [NSString stringWithFormat:@" %d", (int)[firstDayOfMonth year]];
     _label.text = _shouldShowYear ? [monthString stringByAppendingString:yearString] : monthString;
 }
@@ -522,7 +529,7 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
 
 - (NSInteger)offsetForSection:(NSInteger)section {
     NSDate *firstDayOfMonth = [self dateForFirstDayOfSection:section];
-    return [firstDayOfMonth weekday] - 1;
+    return [firstDayOfMonth localizedWeekday] - 1;
 }
 
 - (NSInteger)remainderForSection:(NSInteger)section {

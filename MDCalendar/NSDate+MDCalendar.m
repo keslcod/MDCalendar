@@ -43,58 +43,6 @@
     return MDCalendarDateFromComponents(components);
 }
 
-+ (NSArray *)weekdays {
-    return @[@"Sunday",
-             @"Monday",
-             @"Tuesday",
-             @"Wednesday",
-             @"Thursday",
-             @"Friday",
-             @"Saturday"];
-}
-
-+ (NSArray *)weekdayAbbreviations {
-    return @[@"SUN",
-             @"MON",
-             @"TUE",
-             @"WED",
-             @"THU",
-             @"FRI",
-             @"SAT"];
-}
-
-+ (NSArray *)monthNames {
-    return @[@"Zero",
-             @"January",
-             @"February",
-             @"March",
-             @"April",
-             @"May",
-             @"June",
-             @"July",
-             @"August",
-             @"September",
-             @"October",
-             @"November",
-             @"December"];
-}
-
-+ (NSArray *)shortMonthNames {
-    return @[@"Zero",
-             @"Jan",
-             @"Feb",
-             @"Mar",
-             @"Apr",
-             @"May",
-             @"Jun",
-             @"Jul",
-             @"Aug",
-             @"Sep",
-             @"Oct",
-             @"Nov",
-             @"Dec"];
-}
-
 - (NSDate *)firstDayOfMonth {
     NSDateComponents *components = MDCalendarDateComponentsFromDate(self);
     [components setDay:1];
@@ -120,26 +68,19 @@
     return MDAppendOrdinalityToNumber([self day]);
 }
 
-- (NSString *)weekdayString {
-    return [NSDate weekdays][self.weekday - 1];
+- (NSInteger)weekday {
+	NSDateComponents *components = MDCalendarDateComponentsFromDate(self);
+    return [components weekday];
 }
 
-- (NSInteger)weekday {
-    NSDateComponents *components = MDCalendarDateComponentsFromDate(self);
-    return [components weekday];
+- (NSInteger)localizedWeekday {
+	NSCalendar *calendar = [NSCalendar currentCalendar];
+	return [self localizedWeekdayInCalendar:calendar];
 }
 
 - (NSInteger)month {
     NSDateComponents *components = MDCalendarDateComponentsFromDate(self);
     return [components month];
-}
-
-- (NSString *)monthString {
-    return [NSDate monthNames][[self month]];
-}
-
-- (NSString *)shortMonthString {
-    return [NSDate shortMonthNames][[self month]];
 }
 
 - (NSInteger)year {
@@ -209,6 +150,15 @@
     return [self compare:otherDate] == NSOrderedDescending;
 }
 
+#pragma mark - Private
+
+- (NSInteger)localizedWeekdayInCalendar:(NSCalendar *)calendar {
+	NSDateComponents *components = [calendar components:NSYearCalendarUnit|NSCalendarUnitMonth|NSWeekCalendarUnit|NSWeekdayCalendarUnit|NSDayCalendarUnit fromDate:self];
+	NSUInteger firstDayOfWeek = calendar.firstWeekday;
+	firstDayOfWeek -= 1;
+	NSUInteger weekday = [components weekday] - firstDayOfWeek;
+	return weekday;
+}
 
 #pragma mark - Helpers
                   
