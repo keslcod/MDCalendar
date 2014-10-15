@@ -43,10 +43,6 @@
     return MDCalendarDateFromComponents(components);
 }
 
-+ (NSString *)monthNameForMonth:(NSInteger)month {
-    return [NSDate monthNames][month];
-}
-
 + (NSArray *)weekdays {
     return @[@"Sunday",
              @"Monday",
@@ -120,6 +116,14 @@
     return [components day];
 }
 
+- (NSString *)dayOrdinalityString {
+    return MDAppendOrdinalityToNumber([self day]);
+}
+
+- (NSString *)weekdayString {
+    return [NSDate weekdays][self.weekday - 1];
+}
+
 - (NSInteger)weekday {
     NSDateComponents *components = MDCalendarDateComponentsFromDate(self);
     return [components weekday];
@@ -128,6 +132,10 @@
 - (NSInteger)month {
     NSDateComponents *components = MDCalendarDateComponentsFromDate(self);
     return [components month];
+}
+
+- (NSString *)monthString {
+    return [NSDate monthNames][[self month]];
 }
 
 - (NSString *)shortMonthString {
@@ -212,6 +220,31 @@ NSDateComponents * MDCalendarDateComponentsFromDate(NSDate *date) {
 NSDate * MDCalendarDateFromComponents(NSDateComponents *components) {
     NSCalendar *calendar = [NSCalendar currentCalendar];
     return [calendar dateFromComponents:components];
+}
+
+NSString * MDAppendOrdinalityToNumber(NSInteger number) {
+    NSString *ordinalityString = @"";
+    NSInteger lastDigit = number % 10;
+    
+    NSString * (^appendOrdinalityBlock)(NSString *ordinality) = ^NSString *(NSString *ordinality){
+        return [NSString stringWithFormat:@"%d%@", (int)number, ordinality];
+    };
+    
+    if (number > 10 && number < 20) {
+        ordinalityString = appendOrdinalityBlock(@"th");
+    } else if (lastDigit == 0) {
+        ordinalityString = appendOrdinalityBlock(@"th");
+    } else if (lastDigit == 1) {
+        ordinalityString = appendOrdinalityBlock(@"st");
+    } else if (lastDigit == 2) {
+        ordinalityString = appendOrdinalityBlock(@"nd");
+    } else if (lastDigit == 3) {
+        ordinalityString = appendOrdinalityBlock(@"rd");
+    } else {
+        ordinalityString = appendOrdinalityBlock(@"th");
+    }
+    
+    return ordinalityString;
 }
 
 @end
