@@ -136,12 +136,11 @@
 @property (nonatomic, strong) NSDate  *endDate;
 
 /**
- * Allows you to manually specify a date to be selected when the calendar is set-up.
+ * Allows you to manually specify dates to be selected when the calendar is set-up.
  * Defaults to @see startDate
  */
-@property (nonatomic, strong) NSDate  *selectedDate;  /**< default is startDate */
+@property (nonatomic, strong) NSArray *selectedDates;
 
-@property (nonatomic, strong) NSArray *hightlightDates;
 
 
 ///--------------------------------
@@ -290,6 +289,11 @@
  * Reports the selected date.
  */
 - (void)calendarView:(MDCalendar *)calendarView didSelectDate:(NSDate *)date;
+
+/**
+ * Reports the deselected date.
+ */
+- (void)calendarView:(MDCalendar *)calendarView didDeselectDate:(NSDate *)date;
 
 /**
  * Implement this delegate method to specify which dates should be selectable.
