@@ -717,6 +717,13 @@ static CGFloat const kMDCalendarViewSectionSpacing = 10.f;
 		return NO;
 	}
 
+	NSInteger sectionMonth = [self monthForSection:indexPath.section];
+	if ([date month] != sectionMonth) {
+		if (_showsDaysOutsideCurrentMonth) {
+			return NO;
+		}
+	}
+
 	if ([_delegate respondsToSelector:@selector(calendarView:shouldSelectDate:)]) {
 		return [_delegate calendarView:self shouldSelectDate:date];
 	}

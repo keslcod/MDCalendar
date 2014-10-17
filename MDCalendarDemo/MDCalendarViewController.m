@@ -62,7 +62,6 @@
         NSDate *startDate = [NSDate date];
         NSDate *endDate = [startDate dateByAddingMonths:12*25];
         
-        calendarView.startDate = startDate;
         calendarView.endDate = endDate;
         calendarView.delegate = self;
         calendarView.canSelectDaysBeforeStartDate = NO;
