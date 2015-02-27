@@ -153,10 +153,7 @@
 #pragma mark - Private
 
 - (NSInteger)localizedWeekdayInCalendar:(NSCalendar *)calendar {
-	NSDateComponents *components = [calendar components:NSYearCalendarUnit|NSCalendarUnitMonth|NSWeekCalendarUnit|NSWeekdayCalendarUnit|NSDayCalendarUnit fromDate:self];
-	NSUInteger firstDayOfWeek = calendar.firstWeekday;
-	firstDayOfWeek -= 1;
-	NSUInteger weekday = [components weekday] - firstDayOfWeek;
+    NSUInteger weekday = [calendar ordinalityOfUnit:NSWeekdayCalendarUnit inUnit:NSWeekCalendarUnit forDate:self];
 	return weekday;
 }
 
